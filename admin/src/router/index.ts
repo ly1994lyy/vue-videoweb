@@ -11,20 +11,10 @@ const routes: RouteConfig[] = [
     children: [
       { path: "/", name: "home", component: () => import("../views/Home.vue") },
       {
-        path: "/courses/list",
-        name: "course-list",
-        component: () => import("../views/courses/CourseList.vue"),
-      },
-      {
-        path: "/courses/create",
-        name: "course-creste",
-        component: () => import("../views/courses/CourseEdit.vue"),
-      },
-      {
-        path: "/courses/edit/:id",
-        name: "course-edit",
-        component: () => import("../views/courses/CourseEdit.vue"),
-        props: true,
+        path: "/:resource/list",
+        name: "course-crud",
+        component: () => import("../views/ResourceCrud.vue"),
+        props:true
       },
     ],
   },

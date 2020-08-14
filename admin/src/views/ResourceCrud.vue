@@ -4,12 +4,14 @@
       :data="data.data"
       :option="option"
       :page.sync="page"
+      v-model="obj"
       @row-update="update"
       @row-save="create"
       @row-del="remove"
       @on-load="changePage"
       @sort-change="changeSort"
       @search-change="search"
+      :upload-before="uploadBefore"
     ></avue-crud>
   </div>
 </template>
@@ -19,13 +21,14 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component({})
 export default class ResourceCrud extends Vue {
-    @Prop(String) resource:string
+    @Prop(String) resource !:string
     data = {};
     page={
         total:0,
     }
     query={}
     option = {};
+    obj={}
 
     async fetchOption() {
         const res = await this.$http.get(`${this.resource}/option`);
@@ -40,6 +43,18 @@ export default class ResourceCrud extends Vue {
         });
         this.data = res.data;
         this.page.total = res.data.total
+    }
+
+    async uploadBefore(file, done) {
+      let params = new FormData()
+        params.append('file',file)
+        let res:any = await this.$http.post('upload',params, {
+            headers: { 'Content-Type': 'multipart/form-data;charset=UTF-8' }
+        })
+        console.log(res)
+        this.obj.cover = res.data.url
+        this.obj.file = res.data.url
+        done()
     }
 
     async search(where,done){

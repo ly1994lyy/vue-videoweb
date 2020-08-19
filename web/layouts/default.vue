@@ -31,7 +31,19 @@
             <v-list-item-title v-text="item.text"></v-list-item-title>
           </v-list-item>
         </v-list>
-        <v-list-item class="mt-4" @click="isShowLoginForm = true">
+        <v-list-item
+          v-if="$store.state.auth.user.username"
+          class="mt-4"
+          @click="isShowLoginForm = true"
+        >
+          <v-list-item-action>
+            <v-icon color="grey darken-1">mdi-lock</v-icon>
+          </v-list-item-action>
+          <v-list-item-title class="grey--text text--darken-1">{{
+            $store.state.auth.user.username
+          }}</v-list-item-title>
+        </v-list-item>
+        <v-list-item v-else class="mt-4" @click="isShowLoginForm = true">
           <v-list-item-action>
             <v-icon color="grey darken-1">mdi-lock</v-icon>
           </v-list-item-action>
@@ -50,25 +62,29 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar app clipped-left color="red" dense>
+    <v-app-bar app clipped-left dense flat>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-icon class="mx-4" large>
-        mdi-youtube
+      <v-icon class="mx-4 green--text" large>
+        mdi-android
       </v-icon>
       <v-toolbar-title class="mr-12 align-center">
-        <span class="title">Code Life</span>
+        <span class="subtitle-1 font-weight-bold">Code Life</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-row align="center" style="max-width: 650px;">
+      <v-row align="center" style="max-width: 30vw;">
         <v-text-field
-          :append-icon-cb="() => {}"
           placeholder="搜索..."
           single-line
+          filled
+          rounded
+          dense
           append-icon="mdi-magnify"
           color="white"
           hide-details
         ></v-text-field>
       </v-row>
+      <v-spacer></v-spacer>
+      <v-switch v-model="$vuetify.theme.dark" hide-details></v-switch>
     </v-app-bar>
 
     <v-main>
@@ -98,7 +114,7 @@ export default {
     source: String,
   },
   data: () => ({
-    isShowLoginForm: true,
+    isShowLoginForm: false,
     loginModel: {
       usename: '',
       password: '',
@@ -120,12 +136,11 @@ export default {
   methods: {
     async login() {
       await this.$auth.loginWith('local', { data: this.loginModel })
-      console.log('登录成功')
       this.isShowLoginForm = false
     },
   },
   created() {
-    this.$vuetify.theme.dark = true
+    this.$vuetify.theme.dark = false
   },
 }
 </script>

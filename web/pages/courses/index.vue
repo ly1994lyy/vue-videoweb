@@ -15,7 +15,7 @@
           </v-card-subtitle>
 
           <v-card-actions>
-            <v-btn text>Share</v-btn>
+            <like-btn type="Course" :object="item._id" />
 
             <v-btn color="purple" text>
               Explore
@@ -30,7 +30,10 @@
 </template>
 
 <script>
+import LikeBtn from '../../components/LikeBtn'
+
 export default {
+  components: { LikeBtn },
   async asyncData({ $axios }) {
     const data = await $axios.$get('courses')
     return {
